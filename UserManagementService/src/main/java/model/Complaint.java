@@ -1,15 +1,10 @@
 package model;
 
 import java.sql.*;
-import com.Users;
 
+import javax.ws.rs.core.Response;
 
-
-
-
-public class User {
-
-
+public class Complaint {
 
 	//A common method to connect to the DB
 	private Connection connect() 
@@ -32,7 +27,7 @@ public class User {
 		return con; 
 	 } 
 	
-	public String insertUser(int accno, String username, String email, int phone,String address,String nic) 
+	public String insertComplaint(int accno, String username,int userphone, String complaint,String date) 
 	{ 
 		 String output = ""; 
 		 
@@ -45,8 +40,8 @@ public class User {
 				 return "Error while connecting to the database for inserting."; 
 			 } 
 			 // create a prepared statement
-			 String query = " insert into cusdetails (`userid`,`accountno`,`username`,`useremail`,`userphone`,`useraddress`,`usernic`)"
-			 + " values (?, ?, ?, ?, ?,?,?)"; 
+			 String query = " insert into complaint (`complaintid`,`accountno`,`username`,`userphone`,`complaint`,`date`)"
+			 + " values (?, ?, ?, ?, ?,?)"; 
 			 
 			 PreparedStatement preparedStmt = con.prepareStatement(query); 
 			 
@@ -54,16 +49,16 @@ public class User {
 			 preparedStmt.setInt(1, 0); 
 			 preparedStmt.setInt(2, accno); 
 			 preparedStmt.setString(3, username); 
-			 preparedStmt.setString(4, email);  
-			 preparedStmt.setInt(5, phone);
-			 preparedStmt.setString(6, address);
-			 preparedStmt.setString(7, nic);
+			 preparedStmt.setInt(4, userphone);  
+			 preparedStmt.setString(5, complaint);
+			 preparedStmt.setString(6, date);
+			
 			 
 			 // execute the statement
 			
 			 preparedStmt.execute(); 
 			 con.close(); 
-			 output = "User Data Added Successfully"; 
+			 output = "Complaint Details Inserted successfully"; 
 		 } 
 		 catch (Exception e) 
 		 { 
@@ -77,26 +72,26 @@ public class User {
 	
 	
 	
-//	//Get Funding Body By ID
-//
-//	public Response getUserById(int id) {
+	//Get Funding Body By ID
+
+//	public Response getAccountById(int accountid) {
 //	    User user = null;
 //		  
 //	    
 //	    try {
-//	    	 Connection con = connect();
+//	    	 Connection con = connect();;
 //	         if (con == null) return Response
 //	           .status(Response.Status.INTERNAL_SERVER_ERROR)
 //	           .entity("Database connectivity Error")
 //	           .build();
 //		
 //
-//	      String query = "select * from cusdetails where userid = " + id;
+//	      String query = "select * from accdetails where accountid = " + accountid;
 //	      Statement stmt = con.createStatement();
 //	      ResultSet rs = stmt.executeQuery(query);
 //
 //	      { 
-//				 String userid = Integer.toString(rs.getInt("userid")); 
+//				 String userid1 = Integer.toString(rs.getInt("userid")); 
 //				 String accountno = Integer.toString(rs.getInt("accountno"));
 //				 String username = rs.getString("username"); 
 //				 String useremail = rs.getString("useremail"); 
@@ -122,48 +117,16 @@ public class User {
 //	  }
 //	
 	
-
-	  public Users getUserById(int id) {
-		  
-		  
-		  String query = "select * from cusdetails where userid = " + id;
-	    Users users = new Users();
-	    
-	    
-	    try {
-	    	 Connection con = connect();
-	    	Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(query);
-			 
-
-
-	      if (rs.next()) { 
-	    	  users.setUserid(rs.getInt(1));
-				 users.setAccountno(rs.getInt(2));
-				 users.setUsername(rs.getString(3));
-				 users.setUseremail(rs.getString(4)); 
-				 users.setUserphone(rs.getInt(5)); 
-				 users.setUseraddress(rs.getString(6)); 
-				 users.setUsernic(rs.getString(7)); 
-			
-	      }
-			 
-			
-		 } 
-		 
-	    catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return users;
-	}
 	
 	
 	
 	
 	
 	
-	public String readUsers() 
+	
+	
+	
+	public String readComplaints() 
 	 { 
 		 String output = ""; 
 		 
@@ -180,39 +143,40 @@ public class User {
 			 // Prepare the html table to be displayed
 			 output = "<table border='1'><tr><th>Electricity Account No"
 			 		+ "</th><th>User Name</th>" +
-			 "<th>User Email</th>" + 
-			 "<th>Contact Number</th>" +
-			 "<th>User Address</th>" +
-			 "<th>User NIC</th>" +
+			 "<th>User Phone</th>" + 
+			 "<th>Complaint</th>" +
+			 "<th>Date</th>" +
+			
 			 "<th>Update</th><th>Remove</th></tr>"; 
 			 
-			 String query = "select * from cusdetails"; 
+			 String query = "select * from complaint"; 
 			 Statement stmt = con.createStatement(); 
 			 ResultSet rs = stmt.executeQuery(query); 
 			 
 			 // iterate through the rows in the result set
 			 while (rs.next()) 
 			 { 
-				 String userid = Integer.toString(rs.getInt("userid")); 
+				 String complaintid = Integer.toString(rs.getInt("complaintid")); 
 				 String accountno = Integer.toString(rs.getInt("accountno"));
 				 String username = rs.getString("username"); 
-				 String useremail = rs.getString("useremail"); 
-				 String userphone = Integer.toString(rs.getInt("userphone")); 
-				 String useraddress = rs.getString("useraddress");
-				 String usernic = rs.getString("usernic");
+				 String userphone = Integer.toString(rs.getInt("userphone"));
+				 String complaint = rs.getString("complaint"); 
+				 String date = rs.getString("date"); 
+			
 				 
 				 // Add into the html table
 				 output += "<tr><td>" + accountno + "</td>"; 
 				 output += "<td>" + username + "</td>"; 
-				 output += "<td>" + useremail + "</td>"; 
-				 output += "<td>" + userphone + "</td>";
-				 output += "<td>" + useraddress + "</td>"; 
-				 output += "<td>" + usernic + "</td>"; 
+				 output += "<td>" + userphone + "</td>"; 
+				 output += "<td>" + complaint + "</td>";
+				 output += "<td>" + date + "</td>";
+				
 				 
 				 // buttons
-				 output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"+"</br>"
-				 + "<td><form method='post' action='items.jsp'> <input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>"
-				 + "<input name='userid' type='hidden' value='" + userid 
+				 output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
+				 + "<td><form method='post' action='items.jsp'>"
+				 + "<input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>"
+				 + "<input name='userid' type='hidden' value='" + complaintid 
 				 + "'>" + "</form></td></tr>"; 
 			 }
 			 
@@ -231,7 +195,7 @@ public class User {
 	 } 
 	
 
-	public String updateUser(String userid, String accno, String username, String email, String phone,String address,String nic)
+	public String updateComplaint(String complaintid, String accno, String username,String userphone, String complaint,String date) 
 	{ 
 		 String output = ""; 
 		 
@@ -245,23 +209,22 @@ public class User {
 			 } 
 			 
 			 // create a prepared statement
-			 String query = "UPDATE cusdetails SET accountno=?,username=?,useremail=?,userphone=?,useraddress=?,usernic=?"
-			 		+ " WHERE userid=?"; 
+			 String query = "UPDATE accdetails SET accountno=?,username=?,userphone=?,complaint=?,date=?"
+			 		+ " WHERE complaintid=?"; 
 			 PreparedStatement preparedStmt = con.prepareStatement(query); 
 			 
 			 // binding values
 			 preparedStmt.setInt(1, Integer.parseInt(accno)); 
 			 preparedStmt.setString(2, username); 
-			 preparedStmt.setString(3, email); 
-			 preparedStmt.setInt(4, Integer.parseInt(phone)); 
-			 preparedStmt.setString(5, address); 
-			 preparedStmt.setString(6, nic); 
-			 preparedStmt.setInt(7, Integer.parseInt(userid));
+			 preparedStmt.setInt(3, Integer.parseInt(userphone));
+	         preparedStmt.setString(4,complaint); 
+	         preparedStmt.setString(5,date);
+	         preparedStmt.setInt(6, Integer.parseInt(complaintid));
 			 
 			 // execute the statement
 			 preparedStmt.execute(); 
 			 con.close(); 
-			 output = "User Data Updated Successfully"; 
+			 output = "Complaint Details Updated Successfully"; 
 		 } 
 		 catch (Exception e) 
 		 { 
@@ -271,7 +234,7 @@ public class User {
 		 return output; 
 	}
 	
-	public String deleteUser(String userid) 
+	public String deleteComplaint(String complaintid) 
 	{ 
 		 String output = ""; 
 		 
@@ -284,16 +247,16 @@ public class User {
 			 } 
 			 
 			 // create a prepared statement
-			 String query = "delete from cusdetails where userid=?"; 
+			 String query = "delete from complaint where complaintid=?"; 
 			 PreparedStatement preparedStmt = con.prepareStatement(query); 
 			 
 			 // binding values
-			 preparedStmt.setInt(1, Integer.parseInt(userid)); 
+			 preparedStmt.setInt(1, Integer.parseInt(complaintid)); 
 			 
 			 // execute the statement
 			 preparedStmt.execute(); 
 			 con.close(); 
-			 output = "User Data Deleted Successfully"; 
+			 output = "Complaint Details Deleted Successfully"; 
 		 } 
 		 catch (Exception e) 
 		 { 

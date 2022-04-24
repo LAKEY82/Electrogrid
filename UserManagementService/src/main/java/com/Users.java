@@ -1,6 +1,7 @@
 package com;
-
-public class User {
+import javax.xml.bind.annotation.XmlRootElement;
+@XmlRootElement
+public class Users {
 	private int userid;
 	private int accountno;
 	private String username;
@@ -9,7 +10,7 @@ public class User {
 	private String useraddress;
 	private String usernic;
 	
-	public User(int userid, int accountno, String username, String useremail, int userphone, String useraddress,
+	public Users(int userid, int accountno, String username, String useremail, int userphone, String useraddress,
 			String usernic) {
 		super();
 		this.userid = userid;
@@ -19,6 +20,9 @@ public class User {
 		this.userphone = userphone;
 		this.useraddress = useraddress;
 		this.usernic = usernic;
+	}
+	public Users() {
+		// TODO Auto-generated constructor stub
 	}
 	public int getUserid() {
 		return userid;

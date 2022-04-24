@@ -6,7 +6,7 @@ import model.User;
 import javax.ws.rs.*; 
 import javax.ws.rs.core.MediaType;
 
-
+import com.Users;
 //For JSON
 import com.google.gson.*; 
 
@@ -42,6 +42,13 @@ public class UserService
 //	}
 //	
 //	
+	@GET
+	@Path("/getuserbyid/{id}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Users getUsersById(@PathParam("id") int id) {
+
+		return userObj.getUserById(id);
+	} 
 	
 	
 	@POST

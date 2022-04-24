@@ -2,11 +2,15 @@ package model;
 
 import java.sql.*;
 
+import com.Registers;
+
 
 
 
 
 public class Register{
+	
+Registers registers=new Registers();
 
 	//A common method to connect to the DB
 	private Connection connect() 
@@ -29,7 +33,7 @@ public class Register{
 		return con; 
 	 } 
 	
-	public String insertUsers(String userName, String password, String email,String updatedAt) 
+	public String insertUsers(String userName, String password, String email,String registeredAt) 
 	{ 
 		 String output = ""; 
 		 
@@ -42,7 +46,7 @@ public class Register{
 				 return "Error while connecting to the database for inserting."; 
 			 } 
 			 // create a prepared statement
-			 String query = " insert into register (`id`,`userName`,`password`,`email`,`updatedAt`)"
+			 String query = " insert into register (`id`,`userName`,`password`,`email`,`registeredAt`)"
 			 + " values (?, ?, ?, ?, ?)"; 
 			 
 			 PreparedStatement preparedStmt = con.prepareStatement(query); 
@@ -53,13 +57,15 @@ public class Register{
 			 preparedStmt.setString(2, userName); 
 			 preparedStmt.setString(3, password); 
 			 preparedStmt.setString(4, email);  
-			 preparedStmt.setString(5, updatedAt);
-			
+			 preparedStmt.setString(5,registeredAt);
+
+
 			 
 			 // execute the statement
 			
 			 preparedStmt.execute(); 
 			 con.close(); 
+			 
 			 output = "User Data Added Successfully"; 
 		 } 
 		 catch (Exception e) 
@@ -167,6 +173,38 @@ public class Register{
 	
 	
 	
+  public Registers getRegisterById(int id) {
+		  
+		  
+		  String query = "select * from register where id = " + id;
+	    Registers registers = new Registers();
+	    
+	    
+	    try {
+	    	 Connection con = connect();
+	    	Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(query);
+			 
+
+
+	      if (rs.next()) { 
+	    	  registers.setId(rs.getInt(1));
+	    	  registers.setUserName(rs.getString(2));
+	    	  registers.setPassword(rs.getString(3));
+	    	  registers.setEmail(rs.getString(4)); 
+	    	  registers.setRegisteredAt(rs.getString(5)); 
+				
+	      }
+			 
+			
+		 } 
+		 
+	    catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return registers;
+	}
 	
 	
 	
@@ -191,7 +229,7 @@ public class Register{
 			 output = "<table border='1'><tr><th>User Name"
 			 		+ "</th><th>Password</th>" +
 			 "<th> Email</th>" + 
-			 "<th>Updated At</th>" +
+			 "<th>Registered At</th>" +
 			
 			 "<th>Update</th><th>Remove</th></tr>"; 
 			 
@@ -206,13 +244,13 @@ public class Register{
 			        String userName = rs.getString("userName");
 			        String password = rs.getString("password");
 			        String email = rs.getString("email");
-			        String updatedAt = rs.getString("updatedAt");
+			        String registeredAt = rs.getString("registeredAt");
 				 
 				 // Add into the html table
 				 output += "<tr><td>" + userName + "</td>"; 
 				 output += "<td>" + password + "</td>"; 
 				 output += "<td>" + email + "</td>"; 
-				 output += "<td>" + updatedAt + "</td>";
+				 output += "<td>" + registeredAt + "</td>";
 				
 				 
 				 // buttons
@@ -239,7 +277,7 @@ public class Register{
 
 	
 	
-	public String updateUsers(String id,String userName, String password, String email,String updatedAt)
+	public String updateUsers(String id,String userName, String password, String email,String registeredAt)
 	{ 
 		 String output = ""; 
 		 
@@ -253,7 +291,7 @@ public class Register{
 			 } 
 			 
 			 // create a prepared statement
-			 String query = "UPDATE register SET userName=?,password=?,email=?,updatedAt=?"
+			 String query = "UPDATE register SET userName=?,password=?,email=?,registeredAt=?"
 			 		+ " WHERE id=?"; 
 			 PreparedStatement preparedStmt = con.prepareStatement(query); 
 			 
@@ -261,7 +299,7 @@ public class Register{
 			 preparedStmt.setString(1, userName); 
 			 preparedStmt.setString(2, password); 
 			 preparedStmt.setString(3, email); 
-	         preparedStmt.setString(4, updatedAt); 
+	         preparedStmt.setString(4, registeredAt); 
 	         preparedStmt.setInt(5, Integer.parseInt(id));
 			 
 			 // execute the statement

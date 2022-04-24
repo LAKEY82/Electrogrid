@@ -6,6 +6,7 @@ import model.Register;
 import javax.ws.rs.*; 
 import javax.ws.rs.core.MediaType;
 
+import com.Registers;
 
 //For JSON
 import com.google.gson.*; 
@@ -30,6 +31,13 @@ public class RegisterService
 		return userObj.readUsers(); 
 	} 
 	
+	@GET
+	@Path("/getregisterbyid/{id}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Registers getRegisterById(@PathParam("id") int id) {
+
+		return userObj.getRegisterById(id);
+	} 
 	
 
 	
@@ -51,12 +59,14 @@ public class RegisterService
 	public String insertUsers(@FormParam("userName")String userName, 
 	 @FormParam("password") String password, 
 	 @FormParam("email") String email, 
-	 @FormParam("updatedAt") String updatedAt)
+	 @FormParam("registeredAt") String registeredAt)
 	
 	{ 
-		String output = userObj.insertUsers(userName, password, email, updatedAt); 
+		String output = userObj.insertUsers(userName, password, email, registeredAt); 
 	 	return output; 
 	}
+	
+
 	
 	@PUT
 	@Path("/") 
@@ -72,12 +82,14 @@ public class RegisterService
 		 String userName = userObject.get("userName").getAsString(); 
 		 String password = userObject.get("password").getAsString(); 
 		 String email = userObject.get("email").getAsString(); 
-		 String updatedAt = userObject.get("updatedAt").getAsString();
+		 String registeredAt = userObject.get("updatedAt").getAsString();
 		
-		 String output = userObj.updateUsers(id, userName, password, email,updatedAt); 
+		 String output = userObj.updateUsers(id, userName, password, email,registeredAt); 
 		
 		 return output; 
 	}
+
+
 	
 	@DELETE
 	@Path("/") 

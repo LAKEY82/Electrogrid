@@ -2,15 +2,14 @@ package model;
 
 import java.sql.*;
 
-import com.Registers;
 
 
 
 
 
-public class Register{
-	
-Registers registers=new Registers();
+public class Power {
+
+
 
 	//A common method to connect to the DB
 	private Connection connect() 
@@ -33,7 +32,7 @@ Registers registers=new Registers();
 		return con; 
 	 } 
 	
-	public String insertUsers(String userName, String password, String email,String registeredAt) 
+	public String insertPower(int accno, String period,  int nunits,String unitrate,String totunits) 
 	{ 
 		 String output = ""; 
 		 
@@ -46,27 +45,25 @@ Registers registers=new Registers();
 				 return "Error while connecting to the database for inserting."; 
 			 } 
 			 // create a prepared statement
-			 String query = " insert into register (`id`,`userName`,`password`,`email`,`registeredAt`)"
-			 + " values (?, ?, ?, ?, ?)"; 
+			 String query = " insert into power (`userid`,`accountno`,`period`,`nunits`,`unitrate`,`totunits`)"
+			 + " values (?, ?, ?, ?, ?,?)"; 
 			 
 			 PreparedStatement preparedStmt = con.prepareStatement(query); 
 			 
 			 // binding values
 			 preparedStmt.setInt(1, 0); 
-			 
-			 preparedStmt.setString(2, userName); 
-			 preparedStmt.setString(3, password); 
-			 preparedStmt.setString(4, email);  
-			 preparedStmt.setString(5,registeredAt);
-
-
+			 preparedStmt.setInt(2, accno); 
+			 preparedStmt.setString(3, period); 
+			 preparedStmt.setInt(4, nunits);  
+			 preparedStmt.setString(5, unitrate);
+			 preparedStmt.setString(6, totunits);
+			
 			 
 			 // execute the statement
 			
 			 preparedStmt.execute(); 
 			 con.close(); 
-			 
-			 output = "Registration Successful"; 
+			 output = "Power Monitoring Data Added Successfully"; 
 		 } 
 		 catch (Exception e) 
 		 { 
@@ -125,93 +122,12 @@ Registers registers=new Registers();
 //	  }
 //	
 	
-	
-	 //Get Funding Body By ID
-//
-//	  public Response getUserById(int id) {
-//	    User user = null;
-//	    
-//	    try {
-//	    	 Connection con = connect();
-//	      if (con == null) return Response
-//	        .status(Response.Status.INTERNAL_SERVER_ERROR)
-//	        .entity("Database connectivity Error")
-//	        .build();
-//
-//	      String query = "select * from cusdetails where userid = " + id;
-//	      Statement stmt = con.createStatement();
-//	      ResultSet rs = stmt.executeQuery(query);
-//
-//	      while (rs.next()) {
-//	    	  int userid =rs.getInt("userid"); 
-//				 int accountno = rs.getInt("accountno");
-//				 String username = rs.getString("username"); 
-//				 String useremail = rs.getString("useremail"); 
-//				int userphone = rs.getInt("userphone"); 
-//				 String useraddress = rs.getString("useraddress");
-//				 String usernic = rs.getString("usernic");
-//	             user = new User(accountno, username, useremail,userphone,useraddress,usernic);
-//	            
-//	           
-//	       
-//	      }
-//	      con.close();
-//
-//	    } catch (Exception e) {
-//	      return Response
-//	        .status(Response.Status.INTERNAL_SERVER_ERROR)
-//	        .entity(e)
-//	        .build();
-//	    }
-//
-//	    return Response
-//	      .status(Response.Status.OK)
-//	      .entity(user)
-//	      .build();
-//
-//	  }
-	
-	
-	
-  public Registers getRegisterById(int id) {
-		  
-		  
-		  String query = "select * from register where id = " + id;
-	    Registers registers = new Registers();
-	    
-	    
-	    try {
-	    	 Connection con = connect();
-	    	Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(query);
-			 
 
-
-	      if (rs.next()) { 
-	    	  registers.setId(rs.getInt(1));
-	    	  registers.setUserName(rs.getString(2));
-	    	  registers.setPassword(rs.getString(3));
-	    	  registers.setEmail(rs.getString(4)); 
-	    	  registers.setRegisteredAt(rs.getString(5)); 
-				
-	      }
-			 
-			
-		 } 
-		 
-	    catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return registers;
-	}
+	 
 	
 	
 	
-	
-	
-	
-	public String readUsers() 
+	public String readPowers() 
 	 { 
 		 String output = ""; 
 		 
@@ -226,37 +142,40 @@ Registers registers=new Registers();
 			 
 			 
 			 // Prepare the html table to be displayed
-			 output = "<table border='1'><tr><th>User Name"
-			 		+ "</th><th>Password</th>" +
-			 "<th> Email</th>" + 
-			 "<th>Registered At</th>" +
-			
+			 output = "<table border='1'><tr><th>Electricity Account No"
+			 		+ "</th><th>Period</th>" +
+			 "<th>Units Consumed</th>" + 
+			 "<th>Charge per Unit</th>" +
+			 "<th>Unit Total</th>" +
 			 "<th>Update</th><th>Remove</th></tr>"; 
 			 
-			 String query = "select * from register"; 
+			 String query = "select * from power"; 
 			 Statement stmt = con.createStatement(); 
 			 ResultSet rs = stmt.executeQuery(query); 
 			 
 			 // iterate through the rows in the result set
 			 while (rs.next()) 
 			 { 
-				 int id = rs.getInt("id");
-			        String userName = rs.getString("userName");
-			        String password = rs.getString("password");
-			        String email = rs.getString("email");
-			        String registeredAt = rs.getString("registeredAt");
+				 String userid = Integer.toString(rs.getInt("userid")); 
+				 String accountno = Integer.toString(rs.getInt("accountno"));
+				 String period = rs.getString("period"); 
+				 String nunits = rs.getString("nunits"); 
+				 String unitrate = Integer.toString(rs.getInt("unitrate")); 
+				 String totunits = rs.getString("totunits");
+				
 				 
 				 // Add into the html table
-				 output += "<tr><td>" + userName + "</td>"; 
-				 output += "<td>" + password + "</td>"; 
-				 output += "<td>" + email + "</td>"; 
-				 output += "<td>" + registeredAt + "</td>";
-				
+				 output += "<tr><td>" + accountno + "</td>"; 
+				 output += "<td>" + period + "</td>"; 
+				 output += "<td>" + nunits + "</td>"; 
+				 output += "<td>" + unitrate + "</td>";
+				 output += "<td>" + totunits + "</td>"; 
+				 
 				 
 				 // buttons
 				 output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"+"</br>"
 				 + "<td><form method='post' action='items.jsp'> <input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>"
-				 + "<input name='userid' type='hidden' value='" + id 
+				 + "<input name='userid' type='hidden' value='" + userid 
 				 + "'>" + "</form></td></tr>"; 
 			 }
 			 
@@ -275,9 +194,7 @@ Registers registers=new Registers();
 	 } 
 	
 
-	
-	
-	public String updateUsers(String id,String userName, String password, String email,String registeredAt)
+	public String updatePower(String userid, String accno, String period, String nunits, String unitrate,String totunits)
 	{ 
 		 String output = ""; 
 		 
@@ -291,21 +208,23 @@ Registers registers=new Registers();
 			 } 
 			 
 			 // create a prepared statement
-			 String query = "UPDATE register SET userName=?,password=?,email=?,registeredAt=?"
-			 		+ " WHERE id=?"; 
+			 String query = "UPDATE power SET accountno=?,period=?,nunits=?,unitrate=?,totunits=?"
+			 		+ " WHERE userid=?"; 
 			 PreparedStatement preparedStmt = con.prepareStatement(query); 
 			 
 			 // binding values
-			 preparedStmt.setString(1, userName); 
-			 preparedStmt.setString(2, password); 
-			 preparedStmt.setString(3, email); 
-	         preparedStmt.setString(4, registeredAt); 
-	         preparedStmt.setInt(5, Integer.parseInt(id));
+			 preparedStmt.setInt(1, Integer.parseInt(accno)); 
+			 preparedStmt.setString(2, period); 
+			 preparedStmt.setInt(3, Integer.parseInt(nunits));  
+			 preparedStmt.setDouble(4, Double.parseDouble(unitrate)); 
+			 preparedStmt.setString(5, totunits); 
+		
+			 preparedStmt.setInt(6, Integer.parseInt(userid));
 			 
 			 // execute the statement
 			 preparedStmt.execute(); 
 			 con.close(); 
-			 output = "User profile Updated Successfully"; 
+			 output = "Power Monitoring Data Updated Successfully"; 
 		 } 
 		 catch (Exception e) 
 		 { 
@@ -315,7 +234,7 @@ Registers registers=new Registers();
 		 return output; 
 	}
 	
-	public String deleteUser(String id) 
+	public String deletePower(String userid) 
 	{ 
 		 String output = ""; 
 		 
@@ -328,16 +247,16 @@ Registers registers=new Registers();
 			 } 
 			 
 			 // create a prepared statement
-			 String query = "delete from register where id=?"; 
+			 String query = "delete from power where userid=?"; 
 			 PreparedStatement preparedStmt = con.prepareStatement(query); 
 			 
 			 // binding values
-			 preparedStmt.setInt(1, Integer.parseInt(id)); 
+			 preparedStmt.setInt(1, Integer.parseInt(userid)); 
 			 
 			 // execute the statement
 			 preparedStmt.execute(); 
 			 con.close(); 
-			 output = "User profile Deleted Successfully"; 
+			 output = "Power Monitoring Data Deleted Successfully"; 
 		 } 
 		 catch (Exception e) 
 		 { 

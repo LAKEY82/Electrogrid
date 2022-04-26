@@ -4,6 +4,9 @@ import java.sql.*;
 
 import javax.ws.rs.core.Response;
 
+import com.Complaints;
+import com.Users;
+
 public class Complaint {
 
 	//A common method to connect to the DB
@@ -122,6 +125,40 @@ public class Complaint {
 	
 	
 	
+	  public Complaints getComplaintById(int id) {
+		  
+		  
+		  String query = "select * from complaint where complaintid = " + id;
+	    Complaints users = new Complaints();
+	    
+	    
+	    try {
+	    	 Connection con = connect();
+	    	Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(query);
+			 
+
+
+	      if (rs.next()) { 
+	    	  users.setComplaintid(rs.getInt(1));
+				 users.setAccountno(rs.getInt(2));
+				 users.setUsername(rs.getString(3));
+				 users.setUserphone(rs.getInt(4)); 
+				 users.setComplaint(rs.getString(5)); 
+				 users.setDate(rs.getString(6)); 
+				
+			
+	      }
+			 
+			
+		 } 
+		 
+	    catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
 	
 	
 	
@@ -209,7 +246,7 @@ public class Complaint {
 			 } 
 			 
 			 // create a prepared statement
-			 String query = "UPDATE accdetails SET accountno=?,username=?,userphone=?,complaint=?,date=?"
+			 String query = "UPDATE complaint SET accountno=?,username=?,userphone=?,complaint=?,date=?"
 			 		+ " WHERE complaintid=?"; 
 			 PreparedStatement preparedStmt = con.prepareStatement(query); 
 			 

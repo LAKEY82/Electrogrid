@@ -6,7 +6,8 @@ import model.Account;
 import javax.ws.rs.*; 
 import javax.ws.rs.core.MediaType;
 
-
+import com.Accounts;
+import com.Users;
 //For JSON
 import com.google.gson.*; 
 
@@ -40,7 +41,13 @@ public class AccountService
 //		return accountObj.getAccountById(accountid);
 //	}
 //	
-	
+	@GET
+	@Path("/getaccountbyid/{id}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Accounts getUsersById(@PathParam("id") int id) {
+
+		return accountObj.getAccountById(id);
+	} 
 	
 	
 	@POST

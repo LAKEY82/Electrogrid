@@ -82,7 +82,7 @@ public class RegisterService
 		 String userName = userObject.get("userName").getAsString(); 
 		 String password = userObject.get("password").getAsString(); 
 		 String email = userObject.get("email").getAsString(); 
-		 String registeredAt = userObject.get("updatedAt").getAsString();
+		 String registeredAt = userObject.get("registerdAt").getAsString();
 		
 		 String output = userObj.updateUsers(id, userName, password, email,registeredAt); 
 		

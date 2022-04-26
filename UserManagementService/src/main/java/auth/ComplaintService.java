@@ -6,6 +6,7 @@ import model.Complaint;
 import javax.ws.rs.*; 
 import javax.ws.rs.core.MediaType;
 
+import com.Complaints;
 import com.Users;
 //For JSON
 import com.google.gson.*; 
@@ -30,7 +31,13 @@ public class ComplaintService
 		return complaintObj.readComplaints(); 
 	} 
 	
-	
+	@GET
+	@Path("/getcomplaintbyid/{id}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Complaints getUsersById(@PathParam("id") int id) {
+
+		return complaintObj.getComplaintById(id);
+	} 
 
 	
 //	@GET

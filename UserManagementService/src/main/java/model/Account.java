@@ -4,6 +4,8 @@ import java.sql.*;
 
 import javax.ws.rs.core.Response;
 
+import com.Accounts;
+
 public class Account {
 
 	//A common method to connect to the DB
@@ -120,7 +122,42 @@ public class Account {
 	
 	
 	
+	  public Accounts getAccountById(int id) {
+		  
+		  
+		  String query = "select * from accdetails where accountid = " + id;
+	    Accounts accounts = new Accounts();
+	    
+	    
+	    try {
+	    	 Connection con = connect();
+	    	Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(query);
+			 
+
+
+	      if (rs.next()) { 
+	    	  accounts.setAccountid(rs.getInt(1));
+	    	  accounts.setAccountno(rs.getInt(2));
+	    	  accounts.setPremisesid(rs.getString(3)); 
+	    	  accounts.setAreaoffice(rs.getString(4)); 
+	    	  accounts.setTarifftype(rs.getString(5)); 
+				
+	      }
+			 
+			
+		 } 
+		 
+	    catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return accounts;
+	}
 	
+	  
+	  
+	  
 	
 	
 	
